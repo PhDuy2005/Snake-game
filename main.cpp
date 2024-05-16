@@ -16,6 +16,7 @@ int Level = 1;//muc de nhat (co 3 muc:1, 2, 3)
 int Mode = 1;//1: classic, 2: morden
 int SnakeColor = 2;//Green
 int Direction = 3;//1: qua trai, 2: len tren, 3: qua phai, 0: xuong duoi  
+bool GameOver = false;
 int Score = 0;
 //----------------------------------------------------------------
 //Khai Bao Ham
@@ -33,7 +34,6 @@ void draw_Menu();//ve khung menu
 void setting_Level();//chinh do kho
 void setting_Mode();//chinh che do
 void setting_SnakeColor();//chinh mau ran
-
 //ham xu li ran an qua to va nho
 //ham kiem tra ran an qua to va nho
 // ham kiem tra ran cham tuong
@@ -120,7 +120,9 @@ void move() {
     gotoXY(xcu, ycu);
     cout << " ";
     draw_Snake();
-    Sleep(100);
+    if(Level ==1) Sleep(400);
+    if(Level ==2) Sleep(200);
+    if(Level ==3) Sleep(80);
 }
 void init_Snake()
 {
@@ -333,7 +335,7 @@ void run()
 	//init_fruit();
 	//draw_fruit();
 	draw_Scoreboard();
-	while(1)
+	while(1&&!GameOver)
 	{
 		move();
 	}
