@@ -36,6 +36,8 @@ void move();
 int check_Direction();
 void init_fruit();
 void draw_fruit();
+void start();// Man hinh khi bat dau game
+void start_menu_behavior(int, bool);
 void run();
 void setting();// cai dat cau hinh
 void display();
@@ -51,7 +53,8 @@ bool collide_self();
 
 int main()
 {
-	run();
+    start();
+	//run();
 	_getch();
 }
 
@@ -325,7 +328,7 @@ void run()
             eat_fruit();
         }
 
-            //Kiem tra va cham
+        //Kiem tra va cham
         if (collide_wall() || collide_self()){
             isGameRunning = false;
         }
@@ -334,5 +337,87 @@ void run()
 
         Sleep(100);
 	}
-	
+}
+
+void start(){
+    system("cls");
+    ShowCur(0);
+    draw_Wall();
+    SetColor(4);
+    int x = 37, y = 5;
+    int cursor = 0;
+    gotoXY(x, y);
+    cout << "WHY IS THERE A SNAKE IN MY CONSOLE!?";
+    start_menu_behavior(cursor, false);
+    
+    
+    while(true){
+        if(kbhit()){
+            char x = getch();
+            switch(x){
+                case 'W':
+                case 'w':
+                case 72 : //Up arrow
+                    cursor--;
+                    break;
+                case 'S':
+                case 's':
+                case 80 : //Down arrow
+                    cursor++;
+                    break;
+                case 32 : //Spacebar
+                case 'x':
+                case 'X':
+                    start_menu_behavior(cursor, true);
+                    return;
+                }
+            if (cursor > 3) {cursor = 3;}
+            if (cursor < 0) {cursor = 0;}
+            start_menu_behavior(cursor, false);
+        }
+    }
+
+    getch();
+    run();
+}
+void start_menu_behavior(int _cursor, bool isSelected){
+    int cursor = _cursor; //Con tro de nguoi dung chon cac muc trong menu
+    SetColor(11);
+    int x = 43, y = 12; 
+    gotoXY(x, y);
+
+    if (cursor == 0)
+        SetColor(4);
+    cout << "CLASSIC";
+    SetColor(11);
+    y += 4; gotoXY(x, y);
+    if (cursor == 1)
+        SetColor(4);
+    cout << "MODERN";
+    SetColor(11);
+    y += 4; gotoXY(x, y);
+    if (cursor == 2)
+        SetColor(4);
+    cout << "SETTING";
+    SetColor(11);
+    y += 4; gotoXY(x, y);
+    if (cursor == 3)
+        SetColor(4);
+    cout << "QUIT";
+    SetColor(11);
+
+    if (isSelected){
+        switch (cursor){
+            case 0:
+                gameMode = CLASSIC;
+                run();
+                break;
+            case 1:
+                gameMode = MODERN;
+                run();
+                break;
+            case 3:
+                exit(0);
+        }
+    }
 }
