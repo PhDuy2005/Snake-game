@@ -3,7 +3,8 @@
 #define MAX 100
 using namespace std;
 
-enum FruitType {BIG, SMALL};
+enum FruitType { BIG, SMALL };
+enum GameMode { CLASSIC, MODERN };
 
 struct Point
 {
@@ -22,10 +23,12 @@ struct Fruit
 
 int xcu, ycu;
 Point Snake[MAX];
-Fruit fruit;
 int Length = 3;
 int Direction = 3;//1: qua trai, 2: len tren, 3: qua phai, 0: xuong duoi  
+Fruit fruit;
 int Score = 0;
+bool isGameRunning = true;
+GameMode gameMode = MODERN;
 void draw_Wall();
 void init_Snake();
 void draw_Snake();
@@ -41,7 +44,9 @@ void display();
 void eat_fruit();
 //ham kiem tra ran an qua to va nho
 // ham kiem tra ran cham tuong
+bool collide_wall();
 // ham kiem tra ran cham than
+bool collide_self();
 //ham kiem tra game over
 
 int main()
@@ -123,12 +128,7 @@ void move() {
     gotoXY(xcu, ycu);
     cout << " ";
     draw_Snake();
-
-    if (Snake[0].x == fruit.pos.x && Snake[0].y == fruit.pos.y){
-        eat_fruit();
-    }
-
-    Sleep(100);
+    //Sleep(100); // Ham Sleep() da duoc dem vao run()
 }
 void init_Snake()
 {
@@ -138,8 +138,10 @@ void init_Snake()
 }
 void draw_Snake()
 {
+    if (Snake[0].x > 10 && Snake[0].x < 100 && Snake[0].y > 1 && Snake[0].y < 28)
 	for(int i = 0; i<Length; i++)
 	{
+        
 		gotoXY(Snake[i].x, Snake[i].y);
 		if(i==0) cout<<'0';
 		else cout<<'o';
@@ -244,7 +246,7 @@ void init_fruit()
 
 void draw_fruit()
 {
-    SetColor(3);
+    SetColor(4);
     gotoXY(fruit.pos.x, fruit.pos.y);
     if (fruit.type == BIG){
         cout << "O";
@@ -269,6 +271,40 @@ void eat_fruit()
     }
 }
 
+bool collide_wall()
+{
+    if (gameMode == CLASSIC){
+        if (Snake[0].x < 11 || Snake[0].x > 99 || Snake[0].y < 2 || Snake[0].y > 27){
+            return true;
+        }
+    }
+    else if (gameMode == MODERN){
+        if (Snake[0].x < 11){
+            Snake[0].x = 99;
+        }
+        else if (Snake[0].x > 99){
+            Snake[0].x = 11;}
+
+        if (Snake[0].y < 2){
+            Snake[0].y = 27;
+        }
+        else if (Snake[0].y > 27){
+            Snake[0].y = 2;
+        }
+    }
+    return false;
+}
+
+bool collide_self()
+{
+    for (int i = 1; i < Length; ++i){
+        if (Snake[0].x == Snake[i].x && Snake[0].y == Snake[i].y){
+            return true;
+        }
+    }
+    return false;
+}
+
 void run()
 {
 	system("cls");
@@ -280,9 +316,23 @@ void run()
 	init_fruit();
 	//draw_fruit(); Da su dung trong init_fruit()
 	draw_Scoreboard();
-	while(1)
+
+    //Game Loop
+	while(isGameRunning)
 	{
-		move();
+        //Kiem tra an moi
+        if (Snake[0].x == fruit.pos.x && Snake[0].y == fruit.pos.y){
+            eat_fruit();
+        }
+
+            //Kiem tra va cham
+        if (collide_wall() || collide_self()){
+            isGameRunning = false;
+        }
+        
+        move();
+
+        Sleep(100);
 	}
 	
 }
