@@ -2,13 +2,27 @@
 #include"mylib.h"
 #define MAX 100
 using namespace std;
+
+enum FruitType {BIG, SMALL};
+
 struct Point
 {
 	int x;
 	int y;
 };
+
+struct Fruit
+{
+    Point pos;
+
+    FruitType type = SMALL;
+    bool isOnField = false;
+    int numberEaten = 0;
+};
+
 int xcu, ycu;
 Point Snake[MAX];
+Fruit fruit;
 int Length = 3;
 int Direction = 3;//1: qua trai, 2: len tren, 3: qua phai, 0: xuong duoi  
 int Score = 0;
@@ -24,6 +38,7 @@ void setting();// cai dat cau hinh
 void display();
 
 //ham xu li ran an qua to va nho
+void eat_fruit();
 //ham kiem tra ran an qua to va nho
 // ham kiem tra ran cham tuong
 // ham kiem tra ran cham than
@@ -33,7 +48,6 @@ int main()
 {
 	run();
 	_getch();
-	
 }
 
 int check_Direction()
@@ -109,6 +123,11 @@ void move() {
     gotoXY(xcu, ycu);
     cout << " ";
     draw_Snake();
+
+    if (Snake[0].x == fruit.pos.x && Snake[0].y == fruit.pos.y){
+        eat_fruit();
+    }
+
     Sleep(100);
 }
 void init_Snake()
@@ -164,7 +183,7 @@ void draw_Scoreboard()
     for(int i = 0; i < 28; ++i)
     {
         gotoXY(x, y + i);
-        cout << (char)186; // Ðu?ng d?c
+        cout << (char)186; // ï¿½u?ng d?c
         gotoXY(x+17, y+i);
         cout<<(char)186;
     }
@@ -195,6 +214,61 @@ void draw_Scoreboard()
     cout<<"Tam dung: Space"; 
 }
 
+void init_fruit()
+{
+    if (!fruit.isOnField){
+        bool validPosition;
+        do {
+            validPosition = true;
+            fruit.pos.x = rand() % (100 - 11) + 11; 
+            fruit.pos.y = rand() % (28 - 2) + 2;   
+
+            if (fruit.numberEaten % 4 == 0 && fruit.numberEaten != 0){
+                fruit.type = BIG;
+            } else {
+                fruit.type = SMALL;
+            }
+
+            for (int i = 0; i < Length; ++i){
+                if (Snake[i].x == fruit.pos.x && Snake[i].y == fruit.pos.y){
+                    validPosition = false;
+                    break;
+                }
+            }
+        } while (!validPosition);
+
+        draw_fruit();
+        fruit.isOnField = true;
+    }
+}
+
+void draw_fruit()
+{
+    SetColor(3);
+    gotoXY(fruit.pos.x, fruit.pos.y);
+    if (fruit.type == BIG){
+        cout << "O";
+    } else {
+        cout << "o";
+    }
+    SetColor(11);
+}
+
+void eat_fruit()
+{
+    if (Snake[0].x == fruit.pos.x && Snake[0].y == fruit.pos.y)
+    {
+        Length++;
+        fruit.numberEaten++;
+        fruit.isOnField = false;  // Mark the fruit as eaten
+
+        //Update scoreboard
+
+        // Generate new fruit
+        init_fruit();
+    }
+}
+
 void run()
 {
 	system("cls");
@@ -203,8 +277,8 @@ void run()
 	draw_Wall();
 	init_Snake();
 	draw_Snake();
-	//init_fruit();
-	//draw_fruit();
+	init_fruit();
+	//draw_fruit(); Da su dung trong init_fruit()
 	draw_Scoreboard();
 	while(1)
 	{
