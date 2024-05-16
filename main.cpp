@@ -37,6 +37,7 @@ void collide_wall();// ham kiem tra ran cham tuong
 void collide_self();// ham kiem tra ran cham than
 void start();//Khoi tao cac gia tri khi bat dau
 void run();//chay chuong trinh
+void gameover();//Man hinh ket thuc tro choi
 void setting();// cai dat cau hinh
 void draw_Scoreboard();//ve bang diem va huong dan
 void draw_Menu();//ve khung menu
@@ -471,6 +472,7 @@ void run()
 	{
 		move();
 	}
+    gameover();
 }
 
 void pause() {
@@ -502,6 +504,29 @@ void pause() {
             system("cls");
             start();
             return;
+        }
+    }
+}
+
+void gameover() {
+    system("cls");
+    SetColor(7);
+    gotoXY(50, 12);
+    cout << "GAME OVER";
+    gotoXY(48, 14);
+    cout << "1: Return to menu";
+    gotoXY(48, 16);
+    cout << "2: Quit";
+
+
+    while (true) {
+        char temp = _getch();
+        switch (temp) {
+            case '1': // Retry
+                system("cls");
+                start();
+            case '2': // Quit
+                exit(0); // Terminate the program
         }
     }
 }
