@@ -493,10 +493,10 @@ void run()
     GameOver = false;
 	system("cls");
 	ShowCur(0);//an con tro
+    //Do cac ham init da call trong start() roi nen ko can call nua
 	draw_Wall();
-	init_Snake();
 	draw_Snake();
-	init_fruit();
+    draw_fruit();
 	draw_Scoreboard();
 	while(1&&!GameOver)
 	{
