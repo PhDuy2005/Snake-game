@@ -366,15 +366,14 @@ void setting_Level()
 	    gotoXY(50, 18);
 	    cout<<"3: Difficult";
         draw_Menu();
-		int temp = _getch();
+		char temp = _getch(); //change data type from int to char
+        while (temp != '1' && temp != '2' && temp != '3')
+            temp = _getch();
+
 		if(temp == '1') Level = 1;
 		if(temp == '2') Level = 2;
 		if(temp == '3') Level = 3;
 		system("cls");
-
-        //Code fix tạm cho issue #2
-        if(temp != '1' && temp != '2' && temp != '3') setting_Level();
-        ///////////////////////////////////////////////////////////////
 
 		setting();	
 }
@@ -388,14 +387,13 @@ void setting_Mode()
 	    gotoXY(50, 16);
 	    cout<<"2: Modern";
         draw_Menu();
-		int temp = _getch();
+		char temp = _getch(); //change data type from int to char
+        while (temp != '1' && temp != '2' && temp != '3')
+            temp = _getch();
+
 		if(temp == '1') Mode = 1;
 		if(temp == '2') Mode = 2;
 		system("cls");
-
-        //Code fix tạm cho issue #2
-        if(temp != '1' && temp != '2') setting_Mode();
-        /////////////////////////////////////////////////
 
 		setting();	
 }
@@ -411,15 +409,14 @@ void setting_SnakeColor()
 	    gotoXY(50, 18);
 	    cout<<"3: Yellow";//mau mau: 6
         draw_Menu();
-		int temp = _getch();
+		char temp = _getch(); //change data type from int to char
+        while (temp != '1' && temp != '2' && temp != '3')
+            temp = _getch();
+
 		if(temp == '1') SnakeColor = 2;
 		if(temp == '2') SnakeColor = 4;
 		if(temp == '3') SnakeColor = 6;
 		system("cls");
-
-        //Code fix tạm cho issue #2
-        if(temp != '1' && temp != '2' && temp != '3') setting_SnakeColor();
-        ////////////////////////////////////////////////////////////////////
 
 		setting();	
 }
@@ -437,6 +434,9 @@ void setting()
 	    cout<<"3: Quit";
         draw_Menu();	
 		char temp = _getch();
+        while (temp != '1' && temp != '2' && temp != '3')
+            temp = _getch();
+
 		system("cls");
 		if(temp == '1') run();
 		if(temp == '2')
@@ -467,7 +467,7 @@ void setting()
 		}
         if(temp == '3') exit(0);
 		
-        setting(); //Dong nay de fix tam thoi cho issue #2
+        //setting(); //Dong nay de fix tam thoi cho issue #2
 }
 
 void start()
