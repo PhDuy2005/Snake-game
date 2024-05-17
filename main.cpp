@@ -54,7 +54,6 @@ void game_control(); //Dieu khien tro choi (Pause, Quit)
 int main()
 {
     start();
-	//run();
 	_getch();
 	
 }
@@ -204,8 +203,8 @@ void init_fruit()
         bool validPosition;
         do {
             validPosition = true;
-            fruit.x = rand() % (100 - 11) + 11; 
-            fruit.y = rand() % (28 - 2) + 2;   
+            fruit.x = rand() % (100 - 11) + 11; //11<=x<=99
+            fruit.y = rand() % (28 - 2) + 2; //2<=x<=27  
 
             if (fruitsEaten % 4 == 0 && fruitsEaten != 0){
                 fruitType = 2;
@@ -213,7 +212,8 @@ void init_fruit()
                 fruitType = 1;
             }
 
-            for (int i = 0; i < Length; ++i){
+            for (int i = 0; i < Length; ++i)//kiem tra thuc an co trung voi than ran khong
+			{
                 if (Snake[i].x == fruit.x && Snake[i].y == fruit.y){
                     validPosition = false;
                     break;
@@ -494,10 +494,9 @@ void run()
 	system("cls");
 	ShowCur(0);//an con tro
 	draw_Wall();
-	//init_Snake();
+	init_Snake();
 	draw_Snake();
-	//init_fruit();
-	draw_fruit();
+	init_fruit();
 	draw_Scoreboard();
 	while(1&&!GameOver)
 	{
