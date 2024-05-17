@@ -371,6 +371,11 @@ void setting_Level()
 		if(temp == '2') Level = 2;
 		if(temp == '3') Level = 3;
 		system("cls");
+
+        //Code fix tạm cho issue #2
+        if(temp != '1' && temp != '2' && temp != '3') setting_Level();
+        ///////////////////////////////////////////////////////////////
+
 		setting();	
 }
 void setting_Mode()
@@ -387,6 +392,11 @@ void setting_Mode()
 		if(temp == '1') Mode = 1;
 		if(temp == '2') Mode = 2;
 		system("cls");
+
+        //Code fix tạm cho issue #2
+        if(temp != '1' && temp != '2') setting_Mode();
+        /////////////////////////////////////////////////
+
 		setting();	
 }
 void setting_SnakeColor()
@@ -406,6 +416,11 @@ void setting_SnakeColor()
 		if(temp == '2') SnakeColor = 4;
 		if(temp == '3') SnakeColor = 6;
 		system("cls");
+
+        //Code fix tạm cho issue #2
+        if(temp != '1' && temp != '2' && temp != '3') setting_SnakeColor();
+        ////////////////////////////////////////////////////////////////////
+
 		setting();	
 }
 void setting()
@@ -437,14 +452,22 @@ void setting()
 	        cout<<"3: Choose color";
 			draw_Menu();
 			temp = _getch();
-			system("cls");
-			if(temp == '1') setting_Level();
+			
+            //code de fix tam cho issue #2 ////////////////////
+            while (temp != '1' && temp != '2' && temp != '3'){
+                temp = _getch();
+            }
+            ///////////////////////////////////////////////////
+
+            system("cls");
+            if(temp == '1') setting_Level();
 			if(temp == '2') setting_Mode();
 			if(temp == '3') setting_SnakeColor();
 		
 		}
         if(temp == '3') exit(0);
 		
+        setting(); //Dong nay de fix tam thoi cho issue #2
 }
 
 void start()
