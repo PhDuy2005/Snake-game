@@ -11,6 +11,10 @@ struct Point
 //Bien Toan Cuc
 int xcu, ycu;
 Point Snake[MAX];
+Point fruit;
+bool fruitIsOnField = false;
+int fruitsEaten = 0;
+int fruitType = 1;// 1: nho, 2: lon
 int Length = 3;
 int Level = 1;//muc de nhat (co 3 muc:1, 2, 3)
 int Mode = 1;//1: classic, 2: morden
@@ -24,25 +28,32 @@ void draw_Wall();//ve tuong
 void init_Snake();//khoi tao ran
 void draw_Snake();//ve ran
 void move();//di chuyen ran 
+void action_while_moving(); //Chay cac ham khac trong khi ran dang di chuyen
 int check_Direction();//kiem tra huong khi nhap phim
 void init_fruit();//khoi tao qua
 void draw_fruit();//ve qua
+void eat_fruit();//an qua
+void collide_wall();// ham kiem tra ran cham tuong
+void collide_self();// ham kiem tra ran cham than
+void start();//Khoi tao cac gia tri khi bat dau
 void run();//chay chuong trinh
+void gameover();//Man hinh ket thuc tro choi
 void setting();// cai dat cau hinh
 void draw_Scoreboard();//ve bang diem va huong dan
 void draw_Menu();//ve khung menu
 void setting_Level();//chinh do kho
 void setting_Mode();//chinh che do
 void setting_SnakeColor();//chinh mau ran
-//ham xu li ran an qua to va nho
-//ham kiem tra ran an qua to va nho
-// ham kiem tra ran cham tuong
-// ham kiem tra ran cham than
+void pause(); //tam dung game
+void game_control(); //Dieu khien tro choi (Pause, Quit)
+
+
 //ham kiem tra game over
 
 int main()
 {
-	run();
+    start();
+	//run();
 	_getch();
 	
 }
@@ -81,6 +92,9 @@ int check_Direction()
                     return 0;
                 case 'd':
                     return 3;
+
+                case 27:
+                    pause();
                 default:
                     return -1;  
             }
@@ -119,11 +133,21 @@ void move() {
 
     gotoXY(xcu, ycu);
     cout << " ";
-    draw_Snake();
+
+    action_while_moving();
+
     if(Level ==1) Sleep(400);
     if(Level ==2) Sleep(200);
     if(Level ==3) Sleep(80);
 }
+
+void action_while_moving(){
+    eat_fruit();
+    collide_wall();
+    collide_self();
+    draw_Snake();
+}
+
 void init_Snake()
 {
 	Snake[0].x = 50; Snake[0].y = 10;
@@ -169,6 +193,102 @@ void draw_Wall()
     gotoXY(100, 28); cout << (char)188; 
     gotoXY(10, 28); cout << (char)200; 
 }
+
+
+void init_fruit()
+{
+    if (!fruitIsOnField){
+        bool validPosition;
+        do {
+            validPosition = true;
+            fruit.x = rand() % (100 - 11) + 11; 
+            fruit.y = rand() % (28 - 2) + 2;   
+
+            if (fruitsEaten % 4 == 0 && fruitsEaten != 0){
+                fruitType = 2;
+            } else {
+                fruitType = 1;
+            }
+
+            for (int i = 0; i < Length; ++i){
+                if (Snake[i].x == fruit.x && Snake[i].y == fruit.y){
+                    validPosition = false;
+                    break;
+                }
+            }
+        } while (!validPosition);
+
+        draw_fruit();
+        fruitIsOnField = true;
+    }
+}
+
+void draw_fruit()
+{
+    SetColor(4);
+    gotoXY(fruit.x, fruit.y);
+    if (fruitType == 2){
+        cout << "0";
+    } else {
+        cout << "o";
+    }
+    SetColor(11);
+}
+
+void eat_fruit()
+{
+    if (Snake[0].x == fruit.x && Snake[0].y == fruit.y)
+    {
+        Length++;
+        fruitsEaten++;
+        
+        fruitIsOnField = false;
+
+        //Update scoreboard
+        if (fruitType == 2){
+            Score += 25;
+        } else {
+            Score += 5;
+        }
+        draw_Scoreboard();
+
+        // Generate new fruit
+        init_fruit();
+    }
+}
+
+void collide_wall()
+{
+    if (Mode == 1){
+        if (Snake[0].x < 11 || Snake[0].x > 99 || Snake[0].y < 2 || Snake[0].y > 27){
+            GameOver = true;
+        }
+    }
+    else if (Mode == 2){
+        if (Snake[0].x < 11){
+            Snake[0].x = 99;
+        }
+        else if (Snake[0].x > 99){
+            Snake[0].x = 11;}
+
+        if (Snake[0].y < 2){
+            Snake[0].y = 27;
+        }
+        else if (Snake[0].y > 27){
+            Snake[0].y = 2;
+        }
+    }
+}
+
+void collide_self()
+{
+    for (int i = 1; i < Length; ++i){
+        if (Snake[0].x == Snake[i].x && Snake[0].y == Snake[i].y){
+            GameOver = true;
+        }
+    }
+}
+
 void draw_Scoreboard()
 {
     SetColor(11); 
@@ -192,7 +312,7 @@ void draw_Scoreboard()
     gotoXY(x, y + 27); cout << (char)200; 
     gotoXY(x + 17, y + 27); cout << (char)188; 
     gotoXY(x + 2, y + 2);
-    cout << "DIEM SO: 0";
+    cout << "DIEM SO: " << Score;
     gotoXY(x + 2, y + 6);
     cout << "Len: W ";
     gotoXY(x + 2, y + 7);
@@ -202,9 +322,7 @@ void draw_Scoreboard()
     gotoXY(x + 2, y + 9);
     cout << "Phai: D ";
     gotoXY(x+2, y+13);
-    cout<<"Thoat: Enter";
-    gotoXY(x+2, y+14);
-    cout<<"Tam dung: Space"; 
+    cout<<"Tam dung: Esc";
 }
 void draw_Menu()
 {
@@ -292,6 +410,7 @@ void setting_SnakeColor()
 }
 void setting()
 {
+        system("cls");
 	    SetColor(7);
 	    gotoXY(57, 12);
 	    cout<<"MENU";
@@ -299,10 +418,12 @@ void setting()
 	    cout<<"1: Play New Game";
 	    gotoXY(50, 16);
 	    cout<<"2: Setting";
+        gotoXY(50, 18);
+	    cout<<"3: Quit";
         draw_Menu();	
 		char temp = _getch();
 		system("cls");
-		if(temp == '1') return;
+		if(temp == '1') run();
 		if(temp == '2')
 		{
 			SetColor(7);
@@ -321,23 +442,91 @@ void setting()
 			if(temp == '2') setting_Mode();
 			if(temp == '3') setting_SnakeColor();
 		
-		} 
+		}
+        if(temp == '3') exit(0);
 		
 }
+
+void start()
+{
+    init_Snake();
+    init_fruit();
+    GameOver = false;
+    fruitsEaten = 0;
+    Score = 0;
+    fruitIsOnField = false;
+    setting();
+}
+
 void run()
 {
 	system("cls");
-	setting();
 	ShowCur(0);//an con tro
 	draw_Wall();
-	init_Snake();
+	//init_Snake();
 	draw_Snake();
 	//init_fruit();
-	//draw_fruit();
+	draw_fruit();
 	draw_Scoreboard();
 	while(1&&!GameOver)
 	{
 		move();
 	}
-	
+    gameover();
+}
+
+void pause() {
+    while (true) {
+        system("cls");
+        SetColor(7);
+        gotoXY(57, 12);
+        cout << "PAUSED";
+        gotoXY(50, 14);
+        cout << "1: Resume";
+        gotoXY(50, 16);
+        cout << "2: Return to menu";
+        draw_Menu();
+        
+        char temp = _getch();
+        if (temp == '1') {
+            system("cls");
+
+            //Dua game ve trang thai bang dau
+            draw_Snake();
+            draw_fruit();
+            draw_Scoreboard();
+            draw_Wall();
+
+            return;
+        }
+        if (temp == '2') {
+            // GameOver = true;
+            system("cls");
+            start();
+            return;
+        }
+    }
+}
+
+void gameover() {
+    system("cls");
+    SetColor(7);
+    gotoXY(50, 12);
+    cout << "GAME OVER";
+    gotoXY(48, 14);
+    cout << "1: Return to menu";
+    gotoXY(48, 16);
+    cout << "2: Quit";
+
+
+    while (true) {
+        char temp = _getch();
+        switch (temp) {
+            case '1': // Retry
+                system("cls");
+                start();
+            case '2': // Quit
+                exit(0); // Terminate the program
+        }
+    }
 }
