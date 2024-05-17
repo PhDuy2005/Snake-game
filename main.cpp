@@ -1,5 +1,6 @@
 #include<iostream>
 #include"mylib.h"
+#include"title.h"
 #define MAX 100
 using namespace std;
 struct Point
@@ -130,11 +131,13 @@ void move() {
             Snake[0].x++;
             break;
     }
-
+    
+    action_while_moving();
+    
     gotoXY(xcu, ycu);
     cout << " ";
 
-    action_while_moving();
+    
 
     if(Level ==1) Sleep(400);
     if(Level ==2) Sleep(200);
@@ -326,6 +329,7 @@ void draw_Scoreboard()
 }
 void draw_Menu()
 {
+    draw_title(); //Duoc khai bao trong file title.h 
 	SetColor(11);
 		int x = 45, y = 10;
 		for(x=45;x<70;++x)
@@ -472,18 +476,21 @@ void setting()
 
 void start()
 {
-    init_Snake();
-    init_fruit();
+    
     GameOver = false;
     fruitsEaten = 0;
     Score = 0;
     fruitIsOnField = false;
     Length = 3;
+    Direction = 3;
+    init_Snake();
+    init_fruit();
     setting();
 }
 
 void run()
 {
+    GameOver = false;
 	system("cls");
 	ShowCur(0);//an con tro
 	draw_Wall();
@@ -534,6 +541,7 @@ void pause() {
 
 void gameover() {
     system("cls");
+    draw_Menu();
     SetColor(7);
     gotoXY(50, 12);
     cout << "GAME OVER";
