@@ -455,6 +455,7 @@ void start()
     fruitsEaten = 0;
     Score = 0;
     fruitIsOnField = false;
+    Length = 3;
     setting();
 }
 
@@ -522,11 +523,11 @@ void gameover() {
     while (true) {
         char temp = _getch();
         switch (temp) {
-            case '1': // Retry
+            case '1':
                 system("cls");
                 start();
-            case '2': // Quit
-                exit(0); // Terminate the program
+            case '2':
+                exit(0);
         }
     }
 }
