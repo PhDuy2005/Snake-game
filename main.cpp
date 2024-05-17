@@ -28,6 +28,7 @@ int Score = 0;
 void draw_Wall();//ve tuong
 void init_Snake();//khoi tao ran
 void draw_Snake();//ve ran
+void delete_snake();//Xoa cac dot ran sau moi lan restart game
 void move();//di chuyen ran 
 void action_while_moving(); //Chay cac ham khac trong khi ran dang di chuyen
 int check_Direction();//kiem tra huong khi nhap phim
@@ -166,6 +167,13 @@ void draw_Snake()
 		else cout<<'o';
 	}
 }
+
+void delete_snake(){
+    for (int i = 3; i < MAX; i++)
+    Snake[i].x = Snake[i].y = -1;
+    return;
+}
+
 void draw_Wall()
 {
     SetColor(11);
@@ -483,6 +491,7 @@ void start()
     fruitIsOnField = false;
     Length = 3;
     Direction = 3;
+    delete_snake();
     init_Snake();
     init_fruit();
     setting();
