@@ -3,7 +3,7 @@
 #include <conio.h>
 #include <io.h>
 #include <fcntl.h>
-#include<ctime> 
+#include <ctime> 
 #include "windows.h" 
 //======= l?y t?a d? x c?a con tr? hi?n t?i =============
 #define KEY_NONE	-1
