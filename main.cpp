@@ -1,6 +1,7 @@
-#include<iostream>
-#include"mylib.h"
-#include"title.h"
+#include <iostream>
+#include "mylib.h"
+#include "title.h"
+#include "record.h"
 #define MAX 100
 using namespace std;
 struct Point
