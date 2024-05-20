@@ -1,8 +1,12 @@
 #include <iostream>
 #include "mylib.h"
 #include "title.h"
+
 #include "record.h"
+
 #define MAX 100
+enum MODE { classic = 1, modern = 2 };
+enum DIFF { ez = 1, med = 2, hard = 3 };
 using namespace std;
 struct Point
 {
@@ -18,8 +22,8 @@ bool fruitIsOnField = false;
 int fruitsEaten = 0;
 int fruitType = 1;// 1: nho, 2: lon
 int Length = 3;
-int Level = 1;//muc de nhat (co 3 muc:1, 2, 3)
-int Mode = 1;//1: classic, 2: morden
+enum DIFF Level = ez;//muc de nhat (co 3 muc:1, 2, 3)
+enum MODE Mode = classic;//1: classic, 2: morden
 int SnakeColor = 2;//Green
 int Direction = 3;//1: qua trai, 2: len tren, 3: qua phai, 0: xuong duoi  
 bool GameOver = false;
@@ -271,12 +275,16 @@ void eat_fruit()
 
 void collide_wall()
 {
-    if (Mode == 2){
+
+    if (Mode == modern){
+
         if (Snake[0].x < 11 || Snake[0].x > 99 || Snake[0].y < 2 || Snake[0].y > 27){
             GameOver = true;
         }
     }
-    else if (Mode == 1){
+
+    else if (Mode ==classic){
+
         if (Snake[0].x < 11){
             Snake[0].x = 99;
         }
@@ -383,9 +391,9 @@ void setting_Level()
         while (temp != '1' && temp != '2' && temp != '3')
             temp = _getch();
 
-		if(temp == '1') Level = 1;
-		if(temp == '2') Level = 2;
-		if(temp == '3') Level = 3;
+		if(temp == '1') Level = ez;
+		if(temp == '2') Level = med;
+		if(temp == '3') Level = hard;
 		system("cls");
 
 		setting();	
@@ -404,8 +412,8 @@ void setting_Mode()
         while (temp != '1' && temp != '2' && temp != '3')
             temp = _getch();
 
-		if(temp == '1') Mode = 1;
-		if(temp == '2') Mode = 2;
+		if(temp == '1') Mode = classic;
+		if(temp == '2') Mode = modern;
 		system("cls");
 
 		setting();	
