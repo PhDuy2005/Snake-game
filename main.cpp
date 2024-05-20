@@ -23,8 +23,8 @@ bool fruitIsOnField = false;
 int fruitsEaten = 0;
 int fruitType = 1;// 1: nho, 2: lon
 int Length = 3;
-enum DIFF Level = ez;//muc de nhat (co 3 muc:1, 2, 3)
-enum MODE Mode = classic;//1: classic, 2: morden
+enum DIFF Level = DIFF::ez;//muc de nhat (co 3 muc:1, 2, 3)
+enum MODE Mode = MODE::classic;//1: classic, 2: morden
 int SnakeColor = 2;//Green
 int Direction = 3;//1: qua trai, 2: len tren, 3: qua phai, 0: xuong duoi  
 bool GameOver = false;
@@ -431,9 +431,9 @@ void setting_Level()
         while (temp != '1' && temp != '2' && temp != '3')
             temp = _getch();
 
-		if(temp == '1') Level = ez;
-		if(temp == '2') Level = med;
-		if(temp == '3') Level = hard;
+		if(temp == '1') Level = DIFF::ez;
+		if(temp == '2') Level = DIFF::med;
+		if(temp == '3') Level = DIFF::hard;
 		system("cls");
 
 		setting();	
@@ -452,8 +452,8 @@ void setting_Mode()
         while (temp != '1' && temp != '2' && temp != '3')
             temp = _getch();
 
-		if(temp == '1') Mode = classic;
-		if(temp == '2') Mode = modern;
+		if(temp == '1') Mode = MODE::classic;
+		if(temp == '2') Mode = MODE::modern;
 		system("cls");
 
 		setting();	
