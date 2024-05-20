@@ -39,9 +39,9 @@ struct playerRecord {
 	string name;
 };
 
-vector<playerRecord> classsicEasyVector;
-vector<playerRecord> classsicMedVector;
-vector<playerRecord> classsicHardVector;
+vector<playerRecord> classicEasyVector;
+vector<playerRecord> classicMedVector;
+vector<playerRecord> classicHardVector;
 
 vector<playerRecord> modernEasyVector;
 vector<playerRecord> modernMedVector;
@@ -73,11 +73,40 @@ void readDataFromFile(vector<playerRecord>& container, string filename) {
 }
 
 void readDataFromAllFiles() {
-	readDataFromFile(classsicEasyVector, classicEasyFile);
-	readDataFromFile(classsicMedVector, classicMedFile);
-	readDataFromFile(classsicHardVector, classicHardFile);
+	readDataFromFile(classicEasyVector, classicEasyFile);
+	readDataFromFile(classicMedVector, classicMedFile);
+	readDataFromFile(classicHardVector, classicHardFile);
 
-	readDataFromFile(classsicEasyVector, modernEasyFile);
-	readDataFromFile(classsicMedVector, modernMedFile);
-	readDataFromFile(classsicHardVector, modernHardFile);
+	readDataFromFile(classicEasyVector, modernEasyFile);
+	readDataFromFile(classicMedVector, modernMedFile);
+	readDataFromFile(classicHardVector, modernHardFile);
+}
+
+void getInformation() {
+
+}
+
+void checkHighScore() {
+	switch (Mode) {
+	case MODE::classic:
+		switch (Level) {
+		case DIFF::ez:
+			if (Score > classicEasyVector[4].score);
+		case DIFF::med:
+			if (Score > classicMedVector[4].score);
+		case DIFF::hard:
+			if (Score > classicHardVector[4].score);
+		}
+		break;
+	case MODE::modern:
+		switch (Level) {
+		case DIFF::ez:
+			if (Score > modernEasyVector[4].score);
+		case DIFF::med:
+			if (Score > modernMedVector[4].score);
+		case DIFF::hard:
+			if (Score > modernHardVector[4].score);
+		}
+		break;
+	}
 }
