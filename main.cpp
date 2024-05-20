@@ -270,12 +270,12 @@ void eat_fruit()
 
 void collide_wall()
 {
-    if (Mode == 1){
+    if (Mode == 2){
         if (Snake[0].x < 11 || Snake[0].x > 99 || Snake[0].y < 2 || Snake[0].y > 27){
             GameOver = true;
         }
     }
-    else if (Mode == 2){
+    else if (Mode == 1){
         if (Snake[0].x < 11){
             Snake[0].x = 99;
         }
