@@ -72,6 +72,7 @@ void readDataFromFile(vector<playerRecord>& container, string filename);
 void readDataFromAllFiles();
 void getInformation();
 void checkHighScore();
+void updateRecord();
 void sortRecord(vector<playerRecord>& container);
 void writeDataToFile(vector<playerRecord> container ,string filename);
 void writeDataToAllFiles();
@@ -753,26 +754,28 @@ void getInformation(){
 	thisPlayer.name = temp;
 }
 
+void updateRecord(vector<playerRecord>& container) {
+    container.erase(container.begin() + 4);
+    container.push_back(thisPlayer);
+}
+
 void checkHighScore() {
 	switch (Mode) {
 	case MODE::classic:
 		switch (Level) {
 		case DIFF::ez:
 			if (Score > classicEasyVector[4].score){
-				classicEasyVector.erase(classicEasyVector.begin() + 4);
-				classicEasyVector.push_back(thisPlayer);
+				updateRecord(classicEasyVector);
 			}
 			break;
 		case DIFF::med:
 			if (Score > classicMedVector[4].score){
-				classicMedVector.erase(classicMedVector.begin() + 4);
-				classicMedVector.push_back(thisPlayer);
+				updateRecord(classicMedVector);
 			}
 			break;
 		case DIFF::hard:
 			if (Score > classicHardVector[4].score){
-				classicHardVector.erase(classicHardVector.begin() + 4);
-				classicHardVector.push_back(thisPlayer);
+				updateRecord(classicHardVector);
 			}
 			break;
 		}
@@ -781,20 +784,17 @@ void checkHighScore() {
 		switch (Level) {
 		case DIFF::ez:
 			if (Score > modernEasyVector[4].score){
-				modernEasyVector.erase(modernEasyVector.begin() + 4);
-				modernEasyVector.push_back(thisPlayer);
+				updateRecord(modernEasyVector);
 			}
 			break;
 		case DIFF::med:
 			if (Score > modernMedVector[4].score){
-				modernMedVector.erase(modernMedVector.begin() + 4);
-				modernMedVector.push_back(thisPlayer);
+				updateRecord(modernMedVector);
 			}
 			break;
 		case DIFF::hard:
 			if (Score > modernHardVector[4].score){
-				modernHardVector.erase(modernHardVector.begin() + 4);
-				modernHardVector.push_back(thisPlayer);
+				updateRecord(modernHardVector);
 			}
 			break;
 		}
