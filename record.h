@@ -30,8 +30,7 @@ string modernHardFile = "modern_hard_record.txt";
 //ofstream modern_med_fileOut(modernEasyFile, ios_base::out);
 //ofstream modern_hard_fileOut(modernEasyFile, ios_base::out);
 
-enum MODE { classic = 1, modern = 2 };
-enum DIFF { ez = 1, med = 2, hard = 3 };
+
 
 struct playerRecord {
 	int score;
