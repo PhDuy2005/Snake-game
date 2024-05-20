@@ -1,7 +1,9 @@
 #include <iostream>
 #include "mylib.h"
 #include "title.h"
-//#include "record.h"
+
+#include "record.h"
+
 #define MAX 100
 enum MODE { classic = 1, modern = 2 };
 enum DIFF { ez = 1, med = 2, hard = 3 };
@@ -273,12 +275,16 @@ void eat_fruit()
 
 void collide_wall()
 {
+
     if (Mode == modern){
+
         if (Snake[0].x < 11 || Snake[0].x > 99 || Snake[0].y < 2 || Snake[0].y > 27){
             GameOver = true;
         }
     }
+
     else if (Mode ==classic){
+
         if (Snake[0].x < 11){
             Snake[0].x = 99;
         }
