@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 #include "Mylib.h"
 #include <iostream>
 using namespace std;
