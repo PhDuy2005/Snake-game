@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <iostream>
 using namespace std;
 
 string classicEasyFile = "classic_easy_record.txt";
@@ -13,24 +14,24 @@ string modernEasyFile = "modern_easy_record.txt";
 string modernMedFile = "modern_med_record.txt";
 string modernHardFile = "modern_hard_record.txt";
 
-ifstream classic_easy_fileIn(classicEasyFile, ios_base::in);
-ifstream classic_med_fileIn(classicMedFile, ios_base::in);
-ifstream classic_hard_fileIn(classicHardFile, ios_base::in);
+//ifstream classic_easy_fileIn(classicEasyFile);
+//ifstream classic_med_fileIn(classicMedFile);
+//ifstream classic_hard_fileIn(classicHardFile);
+//
+//ifstream modern_easy_fileIn(modernEasyFile);
+//ifstream modern_med_fileIn(modernEasyFile);
+//ifstream modern_hard_fileIn(modernEasyFile);
 
-ifstream modern_easy_fileIn(modernEasyFile, ios_base::in);
-ifstream modern_med_fileIn(modernEasyFile, ios_base::in);
-ifstream modern_hard_fileIn(modernEasyFile, ios_base::in);
+//ofstream classic_easy_fileOut(classicEasyFile, ios_base::out);
+//ofstream classic_med_fileOut(classicMedFile, ios_base::out);
+//ofstream classic_hard_fileOut(classicHardFile, ios_base::out);
+//
+//ofstream modern_easy_fileOut(modernEasyFile, ios_base::out);
+//ofstream modern_med_fileOut(modernEasyFile, ios_base::out);
+//ofstream modern_hard_fileOut(modernEasyFile, ios_base::out);
 
-ofstream classic_easy_fileOut(classicEasyFile, ios_base::out);
-ofstream classic_med_fileOut(classicMedFile, ios_base::out);
-ofstream classic_hard_fileOut(classicHardFile, ios_base::out);
-
-ofstream modern_easy_fileOut(modernEasyFile, ios_base::out);
-ofstream modern_med_fileOut(modernEasyFile, ios_base::out);
-ofstream modern_hard_fileOut(modernEasyFile, ios_base::out);
-
-enum MODE {classic = 2, modern = 1};
-enum DIFF {ez = 1, med = 2, hard = 3};
+enum MODE { classic = 1, modern = 2 };
+enum DIFF { ez = 1, med = 2, hard = 3 };
 
 struct playerRecord {
 	int score;
@@ -45,7 +46,8 @@ vector<playerRecord> modernEasyVector;
 vector<playerRecord> modernMedVector;
 vector<playerRecord> modernHardVector;
 
-void readDataFromFile(vector<playerRecord>& container, ifstream& fi) {
+void readDataFromFile(vector<playerRecord>& container, string filename) {
+	ifstream fi(filename);
 	if (!fi) {
 		cerr << "Unable to open\n";
 		return;
@@ -70,11 +72,11 @@ void readDataFromFile(vector<playerRecord>& container, ifstream& fi) {
 }
 
 void readDataFromAllFiles() {
-	readDataFromFile(classsicEasyVector, classic_easy_fileIn);
-	readDataFromFile(classsicMedVector, classic_med_fileIn);
-	readDataFromFile(classsicHardVector, classic_hard_fileIn);
+	readDataFromFile(classsicEasyVector, classicEasyFile);
+	readDataFromFile(classsicMedVector, classicMedFile);
+	readDataFromFile(classsicHardVector, classicHardFile);
 
-	readDataFromFile(classsicEasyVector, modern_easy_fileIn);
-	readDataFromFile(classsicMedVector, modern_med_fileIn);
-	readDataFromFile(classsicHardVector, modern_hard_fileIn);
+	readDataFromFile(classsicEasyVector, modernEasyFile);
+	readDataFromFile(classsicMedVector, modernMedFile);
+	readDataFromFile(classsicHardVector, modernHardFile);
 }
