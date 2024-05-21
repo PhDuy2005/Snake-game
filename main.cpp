@@ -1,13 +1,8 @@
 #include <iostream>
-#include <vector>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
 #include "mylib.h"
 #include "title.h"
 
-//#include "record.h" 
+#include "record.h"
 
 #define MAX 100
 enum MODE { classic = 1, modern = 2 };
@@ -17,11 +12,6 @@ struct Point
 {
 	int x;
 	int y;
-};
-
-struct playerRecord {
-	int score;
-	string name;
 };
 
 //----------------------------------------------------------------
@@ -64,19 +54,6 @@ void setting_Mode();//chinh che do
 void setting_SnakeColor();//chinh mau ran
 void pause(); //tam dung game
 void game_control(); //Dieu khien tro choi (Pause, Quit)
-
-//Recording data 
-void access_data();
-void write_record();
-void readDataFromFile(vector<playerRecord>& container, string filename);
-void readDataFromAllFiles();
-void getInformation();
-void checkHighScore();
-void updateRecord();
-void sortRecord(vector<playerRecord>& container);
-void writeDataToFile(vector<playerRecord> container ,string filename);
-void writeDataToAllFiles();
-void showHighScoreMenu();
 
 
 //ham kiem tra game over
@@ -515,12 +492,10 @@ void setting()
 	    gotoXY(50, 16);
 	    cout<<"2: Setting";
         gotoXY(50, 18);
-	    cout<<"3: Highscore";
-        gotoXY(50, 20);
-        cout<<"4: Quit";
+	    cout<<"3: Quit";
         draw_Menu();	
 		char temp = _getch();
-        while (temp != '1' && temp != '2' && temp != '3' && temp != '4')
+        while (temp != '1' && temp != '2' && temp != '3')
             temp = _getch();
 
 		system("cls");
@@ -551,9 +526,7 @@ void setting()
 			if(temp == '3') setting_SnakeColor();
 		
 		}
-        if(temp == '3') showHighScoreMenu();
-
-        if (temp == '4') exit(0);
+        if(temp == '3') exit(0);
 		
         //setting(); //Dong nay de fix tam thoi cho issue #2
 }
@@ -569,7 +542,6 @@ void start()
     Length = 3;
     Direction = 3;
     ShowCur(0);
-    readDataFromAllFiles();
     delete_snake();
     init_Snake();
     init_fruit();
@@ -628,10 +600,6 @@ void pause() {
 
 void gameover() {
     system("cls");
-    draw_title();
-
-    access_data();
-    system("cls");
     draw_Menu();
     SetColor(7);
     gotoXY(50, 12);
@@ -650,287 +618,6 @@ void gameover() {
                 start();
             case '2':
                 exit(0);
-        }
-    }
-}
-
-
-//Recording data (Record.h but got copied here)
-
-//Place holder of playerRecord type (preventing crash)
-playerRecord none = { 0, "NULL" };
-
-string classicEasyFile = "record/classic_easy_record.txt";
-string classicMedFile = "record/classic_med_record.txt";
-string classicHardFile = "record/classic_hard_record.txt";
-
-string modernEasyFile = "record/modern_easy_record.txt";
-string modernMedFile = "record/modern_med_record.txt";
-string modernHardFile = "record/modern_hard_record.txt";
-
-vector<playerRecord> classicEasyVector;
-vector<playerRecord> classicMedVector;
-vector<playerRecord> classicHardVector;
-
-vector<playerRecord> modernEasyVector;
-vector<playerRecord> modernMedVector;
-vector<playerRecord> modernHardVector;
-
-playerRecord thisPlayer;
-
-void readDataFromFile(vector<playerRecord>& container, string filename) {
-	ifstream fi(filename);
-	if (!fi) {
-		cerr << "Unable to open\n";
-		return;
-	}
-
-	string line;
-	while (getline(fi, line)) {
-		istringstream ss(line);
-		int player_score;
-		string player_name;
-
-		ss >> player_score;
-		ss.ignore(1, '|');
-		getline(ss, player_name);
-
-		playerRecord player = { player_score, player_name };
-		container.push_back(player);
-	}
-
-	while (container.size() > 5)
-		container.erase(container.begin() + 5);
-
-}
-
-void readDataFromAllFiles() {
-	readDataFromFile(classicEasyVector, classicEasyFile);
-	readDataFromFile(classicMedVector, classicMedFile);
-	readDataFromFile(classicHardVector, classicHardFile);
-
-	readDataFromFile(modernEasyVector, modernEasyFile);
-	readDataFromFile(modernMedVector, modernMedFile);
-	readDataFromFile(modernHardVector, modernHardFile);
-}
-
-void getInformation(){
-
-	vector<char> name_inCharArray;
-
-
-    gotoXY(52, 13);
-    cout << "GAME OVER!!";
-    gotoXY(45, 21);
-    cout << "Press ENTER to proceed";
-    gotoXY(38, 23);
-    cout << "Press ESC or DEL or BACKSPACE to type again";
-	gotoXY(50, 16);
-	cout << "Score: " << Score << endl;
-	gotoXY(40, 18);
-	cout << "Enter your name: ";
-
-	while(1){
-		if (_kbhit()){
-			char c = getch();
-			if (c >= 32 && c <= 122){
-				name_inCharArray.push_back(c);
-				cout << c;
-			}
-            else if (c == 27 || c == 8){
-                system("cls");
-                draw_title();
-                access_data();
-            }
-            else if (c == 13){
-				break;
-			}
-		}
-	}
-
-
-	thisPlayer.score = Score;
-	string temp(name_inCharArray.begin(), name_inCharArray.end());
-	thisPlayer.name = temp;
-}
-
-void updateRecord(vector<playerRecord>& container) {
-    container.erase(container.begin() + 4);
-    container.push_back(thisPlayer);
-}
-
-void checkHighScore() {
-	switch (Mode) {
-	case MODE::classic:
-		switch (Level) {
-		case DIFF::ez:
-			if (Score > classicEasyVector[4].score){
-				updateRecord(classicEasyVector);
-			}
-			break;
-		case DIFF::med:
-			if (Score > classicMedVector[4].score){
-				updateRecord(classicMedVector);
-			}
-			break;
-		case DIFF::hard:
-			if (Score > classicHardVector[4].score){
-				updateRecord(classicHardVector);
-			}
-			break;
-		}
-		break;
-	case MODE::modern:
-		switch (Level) {
-		case DIFF::ez:
-			if (Score > modernEasyVector[4].score){
-				updateRecord(modernEasyVector);
-			}
-			break;
-		case DIFF::med:
-			if (Score > modernMedVector[4].score){
-				updateRecord(modernMedVector);
-			}
-			break;
-		case DIFF::hard:
-			if (Score > modernHardVector[4].score){
-				updateRecord(modernHardVector);
-			}
-			break;
-		}
-		break;
-	}
-}
-
-void sortRecord(vector<playerRecord>& container){
-	for (int j=0; j < 5; j++){
-        int highestScoreIndex = j;
-        for (int i = 1; i <= 4; i++){
-            if (container[i].score > container[highestScoreIndex].score){
-                string tempName = container[highestScoreIndex].name;
-                int tempScore = container[highestScoreIndex].score;
-                container[highestScoreIndex].name = container[i].name;
-                container[highestScoreIndex].score = container[i].score;
-                container[i].name = tempName;
-                container[i].score = tempScore;
-                highestScoreIndex = i;
-            }
-        }
-    }
-}
-
-void sortAllRecords(){
-	sortRecord(classicEasyVector);
-	sortRecord(classicMedVector);
-	sortRecord(classicHardVector);
-
-	sortRecord(modernEasyVector);
-	sortRecord(modernMedVector);
-	sortRecord(modernHardVector);
-}
-
-void writeDataToFile(vector<playerRecord> container, string filename) {
-    ofstream fo(filename, ios::out);
-    if (!fo) {
-        cerr << "Unable to open file for writing\n";
-        return;
-    }
-
-    for (int i = 0; i <= 4; i++) {
-        fo << container[i].score << " | " << container[i].name << "\n";
-    }
-
-    fo.close();
-}
-
-void writeDataToAllFiles(){
-	writeDataToFile(classicEasyVector, classicEasyFile);
-	writeDataToFile(classicMedVector, classicMedFile);
-	writeDataToFile(classicHardVector, classicHardFile);
-
-	writeDataToFile(modernEasyVector, modernEasyFile);
-	writeDataToFile(modernMedVector, modernMedFile);
-	writeDataToFile(modernHardVector, modernHardFile);
-}
-
-void access_data(){
-    thisPlayer.name = "NULL";
-    thisPlayer.score = 0;
-    
-    getInformation();
-    readDataFromAllFiles();
-    sortAllRecords();
-    checkHighScore();
-    writeDataToAllFiles();
-}
-
-void showHighScoreMenu(){
-    system("cls");
-    readDataFromAllFiles();
-    gotoXY(45, 2);
-    cout << "HIGHSCORE";
-    cout << setfill('0') << setw(4);
-
-    int x, y;
-
-    x = 25; y = 4;
-    gotoXY(x,y);
-    
-    cout << "CLASSIC / EASY";
-    for (auto& v : classicEasyVector){
-        y++; gotoXY(x,y);
-        cout << v.score << "\t | " << v.name;
-    }
-
-    y+=2;
-    gotoXY(x,y);
-    cout << "CLASSIC / NORMAL";
-    for (auto& v : classicMedVector){
-        y++; gotoXY(x,y);
-        cout << v.score << "\t | " << v.name;
-    }
-    
-    y+=2;
-    gotoXY(x,y);
-    cout << "CLASSIC / DIFFICULT";
-    for (auto& v : classicHardVector){
-        y++; gotoXY(x,y);
-        cout << v.score << "\t | " << v.name;
-    }
-
-    x = 55; y = 4;
-    gotoXY(x,y);
-
-    cout << "MODERN / EASY";
-    for (auto& v : modernEasyVector){
-        y++; gotoXY(x,y);
-        cout << v.score << "\t | " << v.name;
-    }
-    
-    y+=2;
-    gotoXY(x,y);
-    cout << "MODERN / NORMAL";
-    for (auto& v : modernMedVector){
-        y++; gotoXY(x,y);
-        cout << v.score << "\t | " << v.name;
-    }
-    
-    y+=2;
-    gotoXY(x,y);
-    cout << "MODERN / DIFFICULT";
-    for (auto& v : modernHardVector){
-        y++; gotoXY(x,y);
-        cout << v.score << "\t | " << v.name;
-    }
-
-    gotoXY(36, 25);
-    cout << "(PRESS ESC TO RETURN TO MENU)";
-
-    cout << setfill(' ') << setw(0);
-
-    while(!_kbhit()){
-        if (getch() == 27){
-            setting();
         }
     }
 }
