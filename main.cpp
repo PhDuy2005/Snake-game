@@ -13,7 +13,6 @@ struct Point
 	int x;
 	int y;
 };
-
 //----------------------------------------------------------------
 //Bien Toan Cuc
 int xcu, ycu;
@@ -128,20 +127,20 @@ void move() {
             Snake[0].y++;
             break;
         case 1:
-            Snake[0].x-=2;
+            Snake[0].x--;
             break;
         case 2:
             Snake[0].y--;
             break;
         case 3:
-            Snake[0].x+=2;
+            Snake[0].x++;
             break;
     }
     
     action_while_moving();
     
     gotoXY(xcu, ycu);
-    cout << "  ";
+    cout << " ";
 
     
 
@@ -151,17 +150,17 @@ void move() {
 }
 
 void action_while_moving(){
+    eat_fruit();
     collide_wall();
     collide_self();
-    eat_fruit();
     draw_Snake();
 }
 
 void init_Snake()
 {
-	Snake[0].x = 51; Snake[0].y = 10;
+	Snake[0].x = 50; Snake[0].y = 10;
 	Snake[1].x = 49; Snake[1].y = 10;
-	Snake[2].x = 47; Snake[2].y = 10;
+	Snake[2].x = 48; Snake[2].y = 10;
 }
 void draw_Snake()
 {
@@ -169,8 +168,8 @@ void draw_Snake()
 	for(int i = 0; i<Length; i++)
 	{
 		gotoXY(Snake[i].x, Snake[i].y);
-		if(i==0) cout << (char)178 << (char)178;
-		else cout<<(char)177 << (char)177;
+		if(i==0) cout<<'0';
+		else cout<<'o';
 	}
 }
 
@@ -184,7 +183,7 @@ void draw_Wall()
 {
     SetColor(11);
     int x = 10, y = 1;
-    for(x = 10; x < 99; ++x)
+    for(x = 10; x < 100; ++x)
     {
         gotoXY(x, y);
         cout << (char)205;
@@ -205,8 +204,8 @@ void draw_Wall()
         cout << (char)186;
     }
     gotoXY(10, 1); cout << (char)201; 
-    gotoXY(99, 1); cout << (char)187; 
-    gotoXY(99, 28); cout << (char)188; 
+    gotoXY(100, 1); cout << (char)187; 
+    gotoXY(100, 28); cout << (char)188; 
     gotoXY(10, 28); cout << (char)200; 
 }
 
@@ -217,10 +216,8 @@ void init_fruit()
         bool validPosition;
         do {
             validPosition = true;
-            fruit.x = rand() % (100 - 15) + 11; //11<=x<=95
-            fruit.y = rand() % (28 - 3) + 2; //2<=x<=26  
-
-
+            fruit.x = rand() % (100 - 11) + 11; //11<=x<=99
+            fruit.y = rand() % (28 - 2) + 2; //2<=x<=27  
 
             if (fruitsEaten % 4 == 0 && fruitsEaten != 0){
                 fruitType = 2;
@@ -229,16 +226,8 @@ void init_fruit()
             }
 
             for (int i = 0; i < Length; ++i)//kiem tra thuc an co trung voi than ran khong
-			{   
-                if (fruit.x % 2 == 0){
-                    validPosition = false;
-                    break;
-                }
-                if ((Snake[i].x == fruit.x && Snake[i].y == fruit.y)
-                    ||(Snake[i].x == fruit.x + 2 && Snake[i].y == fruit.y)
-                    ||(Snake[i].x == fruit.x && Snake[i].y == fruit.y + 1)
-                    ||(Snake[i].x == fruit.x + 2 && Snake[i].y == fruit.y + 1)
-                    ){
+			{
+                if (Snake[i].x == fruit.x && Snake[i].y == fruit.y){
                     validPosition = false;
                     break;
                 }
@@ -255,62 +244,33 @@ void draw_fruit()
     SetColor(4);
     gotoXY(fruit.x, fruit.y);
     if (fruitType == 2){
-        cout << (char)178 << (char)178 << (char)178 << (char)178;
-        gotoXY (fruit.x, fruit.y + 1);
-        cout << (char)178 << (char)178 << (char)178 << (char)178;
+        cout << "0";
     } else {
-        cout << (char)178 << (char)178;
+        cout << "o";
     }
     SetColor(11);
 }
 
 void eat_fruit()
 {
-    switch(fruitType){
-        case 1:
-            if (Snake[0].x == fruit.x && Snake[0].y == fruit.y)
-            {
-                Length++;
-                fruitsEaten++;
-                
-                fruitIsOnField = false;
-
-                //Update scoreboard
-                Score += 5;
-                draw_Scoreboard();
-
-                // Generate new fruit
-                init_fruit();
-            }
-            break;
+    if (Snake[0].x == fruit.x && Snake[0].y == fruit.y)
+    {
+        Length++;
+        fruitsEaten++;
         
-        case 2:
-            if (
-                (Snake[0].x == fruit.x && Snake[0].y == fruit.y)
-                || (Snake[0].x == fruit.x+2 && Snake[0].y == fruit.y)
-                || (Snake[0].x == fruit.x && Snake[0].y == fruit.y+1)
-                || (Snake[0].x == fruit.x+2 && Snake[0].y == fruit.y+1)
-                )
-            {
-                gotoXY(fruit.x, fruit.y);
-                cout << "    ";
-                gotoXY(fruit.x, fruit.y+1);
-                cout << "    ";
-                Length++;
-                fruitsEaten++;
-                
-                fruitIsOnField = false;
+        fruitIsOnField = false;
 
-                //Update scoreboard
-                Score += 25;
-                draw_Scoreboard();
+        //Update scoreboard
+        if (fruitType == 2){
+            Score += 25;
+        } else {
+            Score += 5;
+        }
+        draw_Scoreboard();
 
-                // Generate new fruit
-                init_fruit();
-            }
-            break;
+        // Generate new fruit
+        init_fruit();
     }
-    
 }
 
 void collide_wall()
@@ -326,9 +286,9 @@ void collide_wall()
     else if (Mode ==classic){
 
         if (Snake[0].x < 11){
-            Snake[0].x = 97;
+            Snake[0].x = 99;
         }
-        else if (Snake[0].x > 97){
+        else if (Snake[0].x > 99){
             Snake[0].x = 11;}
 
         if (Snake[0].y < 2){
@@ -536,12 +496,10 @@ void start()
     
     GameOver = false;
     fruitsEaten = 0;
-    fruitType = 1;
     Score = 0;
     fruitIsOnField = false;
     Length = 3;
     Direction = 3;
-    ShowCur(0);
     delete_snake();
     init_Snake();
     init_fruit();
