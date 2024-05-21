@@ -10,9 +10,10 @@ enum DIFF { ez = 1, med = 2, hard = 3 };
 using namespace std;
 struct Point
 {
-	int x;
-	int y;
+    int x;
+    int y;
 };
+
 //----------------------------------------------------------------
 //Bien Toan Cuc
 int xcu, ycu;
@@ -60,8 +61,8 @@ void game_control(); //Dieu khien tro choi (Pause, Quit)
 int main()
 {
     start();
-	_getch();
-	
+    _getch();
+
 }
 
 int check_Direction()
@@ -71,47 +72,47 @@ int check_Direction()
         char x = _getch();//lay ki tu ra  
         if (x == 0 || x == -32)
         {
-            x = _getch(); 
+            x = _getch();
             switch (x)
             {
-                case 72:  
-                    return 2;
-                case 75:  
-                    return 1;
-                case 80:  
-                    return 0;
-                case 77:  
-                    return 3;
-                default:
-                    return -1;  
+            case 72:
+                return 2;
+            case 75:
+                return 1;
+            case 80:
+                return 0;
+            case 77:
+                return 3;
+            default:
+                return -1;
             }
         }
         else
         {
             switch (x)
             {
-                case 'w':
-                    return 2;
-                case 'a':
-                    return 1;
-                case 's':
-                    return 0;
-                case 'd':
-                    return 3;
+            case 'w':
+                return 2;
+            case 'a':
+                return 1;
+            case 's':
+                return 0;
+            case 'd':
+                return 3;
 
-                case 27:
-                    pause();
-                default:
-                    return -1;  
+            case 27:
+                pause();
+            default:
+                return -1;
             }
         }
     }
-    return -1; 
+    return -1;
 }
 
 void move() {
     int newDirection = check_Direction();
-    if (newDirection != -1 &&newDirection != (Direction^2) ) {
+    if (newDirection != -1 && newDirection != (Direction ^ 2)) {
         Direction = newDirection;
     }
 
@@ -123,59 +124,59 @@ void move() {
     }
 
     switch (Direction) {
-        case 0:
-            Snake[0].y++;
-            break;
-        case 1:
-            Snake[0].x--;
-            break;
-        case 2:
-            Snake[0].y--;
-            break;
-        case 3:
-            Snake[0].x++;
-            break;
+    case 0:
+        Snake[0].y++;
+        break;
+    case 1:
+        Snake[0].x -= 2;
+        break;
+    case 2:
+        Snake[0].y--;
+        break;
+    case 3:
+        Snake[0].x += 2;
+        break;
     }
-    
+
     action_while_moving();
-    
+
     gotoXY(xcu, ycu);
-    cout << " ";
+    cout << "  ";
 
-    
 
-    if(Level ==1) Sleep(400);
-    if(Level ==2) Sleep(200);
-    if(Level ==3) Sleep(80);
+
+    if (Level == 1) Sleep(400);
+    if (Level == 2) Sleep(200);
+    if (Level == 3) Sleep(80);
 }
 
-void action_while_moving(){
-    eat_fruit();
+void action_while_moving() {
     collide_wall();
     collide_self();
+    eat_fruit();
     draw_Snake();
 }
 
 void init_Snake()
 {
-	Snake[0].x = 50; Snake[0].y = 10;
-	Snake[1].x = 49; Snake[1].y = 10;
-	Snake[2].x = 48; Snake[2].y = 10;
+    Snake[0].x = 51; Snake[0].y = 10;
+    Snake[1].x = 49; Snake[1].y = 10;
+    Snake[2].x = 47; Snake[2].y = 10;
 }
 void draw_Snake()
 {
     SetColor(SnakeColor);
-	for(int i = 0; i<Length; i++)
-	{
-		gotoXY(Snake[i].x, Snake[i].y);
-		if(i==0) cout<<'0';
-		else cout<<'o';
-	}
+    for (int i = 0; i < Length; i++)
+    {
+        gotoXY(Snake[i].x, Snake[i].y);
+        if (i == 0) cout << (char)178 << (char)178;
+        else cout << (char)177 << (char)177;
+    }
 }
 
-void delete_snake(){
+void delete_snake() {
     for (int i = 3; i < MAX; i++)
-    Snake[i].x = Snake[i].y = -1;
+        Snake[i].x = Snake[i].y = -1;
     return;
 }
 
@@ -183,51 +184,62 @@ void draw_Wall()
 {
     SetColor(11);
     int x = 10, y = 1;
-    for(x = 10; x < 100; ++x)
+    for (x = 10; x < 99; ++x)
     {
         gotoXY(x, y);
         cout << (char)205;
     }
-    for(y = 1; y < 28; ++y)
+    for (y = 1; y < 28; ++y)
     {
         gotoXY(x, y);
         cout << (char)186;
     }
-    for(; x > 10; --x)
+    for (; x > 10; --x)
     {
         gotoXY(x, y);
         cout << (char)205;
     }
-    for(; y > 1; --y)
+    for (; y > 1; --y)
     {
         gotoXY(x, y);
         cout << (char)186;
     }
-    gotoXY(10, 1); cout << (char)201; 
-    gotoXY(100, 1); cout << (char)187; 
-    gotoXY(100, 28); cout << (char)188; 
-    gotoXY(10, 28); cout << (char)200; 
+    gotoXY(10, 1); cout << (char)201;
+    gotoXY(99, 1); cout << (char)187;
+    gotoXY(99, 28); cout << (char)188;
+    gotoXY(10, 28); cout << (char)200;
 }
 
 
 void init_fruit()
 {
-    if (!fruitIsOnField){
+    if (!fruitIsOnField) {
         bool validPosition;
         do {
             validPosition = true;
-            fruit.x = rand() % (100 - 11) + 11; //11<=x<=99
-            fruit.y = rand() % (28 - 2) + 2; //2<=x<=27  
+            fruit.x = rand() % (100 - 15) + 11; //11<=x<=95
+            fruit.y = rand() % (28 - 3) + 2; //2<=x<=26  
 
-            if (fruitsEaten % 4 == 0 && fruitsEaten != 0){
+
+
+            if (fruitsEaten % 4 == 0 && fruitsEaten != 0) {
                 fruitType = 2;
-            } else {
+            }
+            else {
                 fruitType = 1;
             }
 
             for (int i = 0; i < Length; ++i)//kiem tra thuc an co trung voi than ran khong
-			{
-                if (Snake[i].x == fruit.x && Snake[i].y == fruit.y){
+            {
+                if (fruit.x % 2 == 0) {
+                    validPosition = false;
+                    break;
+                }
+                if ((Snake[i].x == fruit.x && Snake[i].y == fruit.y)
+                    || (Snake[i].x == fruit.x + 2 && Snake[i].y == fruit.y)
+                    || (Snake[i].x == fruit.x && Snake[i].y == fruit.y + 1)
+                    || (Snake[i].x == fruit.x + 2 && Snake[i].y == fruit.y + 1)
+                    ) {
                     validPosition = false;
                     break;
                 }
@@ -243,58 +255,89 @@ void draw_fruit()
 {
     SetColor(4);
     gotoXY(fruit.x, fruit.y);
-    if (fruitType == 2){
-        cout << "0";
-    } else {
-        cout << "o";
+    if (fruitType == 2) {
+        cout << (char)178 << (char)178 << (char)178 << (char)178;
+        gotoXY(fruit.x, fruit.y + 1);
+        cout << (char)178 << (char)178 << (char)178 << (char)178;
+    }
+    else {
+        cout << (char)178 << (char)178;
     }
     SetColor(11);
 }
 
 void eat_fruit()
 {
-    if (Snake[0].x == fruit.x && Snake[0].y == fruit.y)
-    {
-        Length++;
-        fruitsEaten++;
-        
-        fruitIsOnField = false;
+    switch (fruitType) {
+    case 1:
+        if (Snake[0].x == fruit.x && Snake[0].y == fruit.y)
+        {
+            Length++;
+            fruitsEaten++;
 
-        //Update scoreboard
-        if (fruitType == 2){
-            Score += 25;
-        } else {
+            fruitIsOnField = false;
+
+            //Update scoreboard
             Score += 5;
-        }
-        draw_Scoreboard();
+            draw_Scoreboard();
 
-        // Generate new fruit
-        init_fruit();
+            // Generate new fruit
+            init_fruit();
+        }
+        break;
+
+    case 2:
+        if (
+            (Snake[0].x == fruit.x && Snake[0].y == fruit.y)
+            || (Snake[0].x == fruit.x + 2 && Snake[0].y == fruit.y)
+            || (Snake[0].x == fruit.x && Snake[0].y == fruit.y + 1)
+            || (Snake[0].x == fruit.x + 2 && Snake[0].y == fruit.y + 1)
+            )
+        {
+            gotoXY(fruit.x, fruit.y);
+            cout << "    ";
+            gotoXY(fruit.x, fruit.y + 1);
+            cout << "    ";
+            Length++;
+            fruitsEaten++;
+
+            fruitIsOnField = false;
+
+            //Update scoreboard
+            Score += 25;
+            draw_Scoreboard();
+
+            // Generate new fruit
+            init_fruit();
+        }
+        break;
     }
+
 }
 
 void collide_wall()
 {
 
-    if (Mode == modern){
+    if (Mode == modern) {
 
-        if (Snake[0].x < 11 || Snake[0].x > 99 || Snake[0].y < 2 || Snake[0].y > 27){
+        if (Snake[0].x < 11 || Snake[0].x > 99 || Snake[0].y < 2 || Snake[0].y > 27) {
             GameOver = true;
         }
     }
 
-    else if (Mode ==classic){
+    else if (Mode == classic) {
 
-        if (Snake[0].x < 11){
-            Snake[0].x = 99;
+        if (Snake[0].x < 11) {
+            Snake[0].x = 97;
         }
-        else if (Snake[0].x > 99){
-            Snake[0].x = 11;}
+        else if (Snake[0].x > 97) {
+            Snake[0].x = 11;
+        }
 
-        if (Snake[0].y < 2){
+        if (Snake[0].y < 2) {
             Snake[0].y = 27;
         }
-        else if (Snake[0].y > 27){
+        else if (Snake[0].y > 27) {
             Snake[0].y = 2;
         }
     }
@@ -302,8 +345,8 @@ void collide_wall()
 
 void collide_self()
 {
-    for (int i = 1; i < Length; ++i){
-        if (Snake[0].x == Snake[i].x && Snake[0].y == Snake[i].y){
+    for (int i = 1; i < Length; ++i) {
+        if (Snake[0].x == Snake[i].x && Snake[0].y == Snake[i].y) {
             GameOver = true;
         }
     }
@@ -311,26 +354,26 @@ void collide_self()
 
 void draw_Scoreboard()
 {
-    SetColor(11); 
+    SetColor(11);
     int x = 101, y = 1;
-    for(int i = 0; i < 28; ++i)
+    for (int i = 0; i < 28; ++i)
     {
         gotoXY(x, y + i);
-        cout << (char)186; 
-        gotoXY(x+17, y+i);
-        cout<<(char)186;
+        cout << (char)186;
+        gotoXY(x + 17, y + i);
+        cout << (char)186;
     }
-    for(int i = 0; i < 18; ++i)
+    for (int i = 0; i < 18; ++i)
     {
         gotoXY(x + i, y);
         cout << (char)205;
         gotoXY(x + i, y + 27);
-        cout << (char)205; 
+        cout << (char)205;
     }
-    gotoXY(x, y); cout << (char)201; 
-    gotoXY(x + 17, y); cout << (char)187; 
-    gotoXY(x, y + 27); cout << (char)200; 
-    gotoXY(x + 17, y + 27); cout << (char)188; 
+    gotoXY(x, y); cout << (char)201;
+    gotoXY(x + 17, y); cout << (char)187;
+    gotoXY(x, y + 27); cout << (char)200;
+    gotoXY(x + 17, y + 27); cout << (char)188;
     gotoXY(x + 2, y + 2);
     cout << "DIEM SO: " << Score;
     gotoXY(x + 2, y + 6);
@@ -341,165 +384,167 @@ void draw_Scoreboard()
     cout << "Trai: A ";
     gotoXY(x + 2, y + 9);
     cout << "Phai: D ";
-    gotoXY(x+2, y+13);
-    cout<<"Tam dung: Esc";
+    gotoXY(x + 2, y + 13);
+    cout << "Tam dung: Esc";
 }
 void draw_Menu()
 {
     draw_title(); //Duoc khai bao trong file title.h 
-	SetColor(11);
-		int x = 45, y = 10;
-		for(x=45;x<70;++x)
-		{
-			gotoXY(x, y);
-			cout<<(char)205;
-		}
-		for(y=10;y<21;++y)
-		{
-			gotoXY(x, y);
-			cout<<(char)186;
-		}
-		for(x=70;x>45;--x)
-		{
-			gotoXY(x, y);
-			cout<<(char)205;
-		}
-		for(y = 21;y>10;--y)
-		{
-			gotoXY(x, y);
-			cout<<(char)186;
-		}
-		gotoXY(45, 10); cout<<(char)201;
-		gotoXY(70, 10); cout<<(char)187;
-		gotoXY(70, 21); cout<<(char)188;
-		gotoXY(45, 21); cout<<(char)200;
+    SetColor(11);
+    int x = 45, y = 10;
+    for (x = 45; x < 70; ++x)
+    {
+        gotoXY(x, y);
+        cout << (char)205;
+    }
+    for (y = 10; y < 21; ++y)
+    {
+        gotoXY(x, y);
+        cout << (char)186;
+    }
+    for (x = 70; x > 45; --x)
+    {
+        gotoXY(x, y);
+        cout << (char)205;
+    }
+    for (y = 21; y > 10; --y)
+    {
+        gotoXY(x, y);
+        cout << (char)186;
+    }
+    gotoXY(45, 10); cout << (char)201;
+    gotoXY(70, 10); cout << (char)187;
+    gotoXY(70, 21); cout << (char)188;
+    gotoXY(45, 21); cout << (char)200;
 
 }
 void setting_Level()
 {
-	    SetColor(7);
-	    gotoXY(57, 12);
-	    cout<<"LEVEL";
-	    gotoXY(50, 14);
-	    cout<<"1: Easy";
-	    gotoXY(50, 16);
-	    cout<<"2: Normal";
-	    gotoXY(50, 18);
-	    cout<<"3: Difficult";
-        draw_Menu();
-		char temp = _getch(); //change data type from int to char
-        while (temp != '1' && temp != '2' && temp != '3')
-            temp = _getch();
+    SetColor(7);
+    gotoXY(57, 12);
+    cout << "LEVEL";
+    gotoXY(50, 14);
+    cout << "1: Easy";
+    gotoXY(50, 16);
+    cout << "2: Normal";
+    gotoXY(50, 18);
+    cout << "3: Difficult";
+    draw_Menu();
+    char temp = _getch(); //change data type from int to char
+    while (temp != '1' && temp != '2' && temp != '3')
+        temp = _getch();
 
-		if(temp == '1') Level = DIFF::ez;
-		if(temp == '2') Level = DIFF::med;
-		if(temp == '3') Level = DIFF::hard;
-		system("cls");
+    if (temp == '1') Level = DIFF::ez;
+    if (temp == '2') Level = DIFF::med;
+    if (temp == '3') Level = DIFF::hard;
+    system("cls");
 
-		setting();	
+    setting();
 }
 void setting_Mode()
 {
-	    SetColor(7);
-	    gotoXY(57, 12);
-	    cout<<"MODE";
-	    gotoXY(50, 14);
-	    cout<<"1: Classic";
-	    gotoXY(50, 16);
-	    cout<<"2: Modern";
-        draw_Menu();
-		char temp = _getch(); //change data type from int to char
-        while (temp != '1' && temp != '2' && temp != '3')
-            temp = _getch();
+    SetColor(7);
+    gotoXY(57, 12);
+    cout << "MODE";
+    gotoXY(50, 14);
+    cout << "1: Classic";
+    gotoXY(50, 16);
+    cout << "2: Modern";
+    draw_Menu();
+    char temp = _getch(); //change data type from int to char
+    while (temp != '1' && temp != '2' && temp != '3')
+        temp = _getch();
 
-		if(temp == '1') Mode = MODE::classic;
-		if(temp == '2') Mode = MODE::modern;
-		system("cls");
+    if (temp == '1') Mode = MODE::classic;
+    if (temp == '2') Mode = MODE::modern;
+    system("cls");
 
-		setting();	
+    setting();
 }
 void setting_SnakeColor()
 {
-	    SetColor(7);
-	    gotoXY(57, 12);
-	    cout<<"SNAKE COLOR";
-	    gotoXY(50, 14);
-	    cout<<"1: Green";//ma mau: 2
-	    gotoXY(50, 16);
-	    cout<<"2: Red";//ma mau: 4
-	    gotoXY(50, 18);
-	    cout<<"3: Yellow";//mau mau: 6
-        draw_Menu();
-		char temp = _getch(); //change data type from int to char
-        while (temp != '1' && temp != '2' && temp != '3')
-            temp = _getch();
+    SetColor(7);
+    gotoXY(57, 12);
+    cout << "SNAKE COLOR";
+    gotoXY(50, 14);
+    cout << "1: Green";//ma mau: 2
+    gotoXY(50, 16);
+    cout << "2: Red";//ma mau: 4
+    gotoXY(50, 18);
+    cout << "3: Yellow";//mau mau: 6
+    draw_Menu();
+    char temp = _getch(); //change data type from int to char
+    while (temp != '1' && temp != '2' && temp != '3')
+        temp = _getch();
 
-		if(temp == '1') SnakeColor = 2;
-		if(temp == '2') SnakeColor = 4;
-		if(temp == '3') SnakeColor = 6;
-		system("cls");
+    if (temp == '1') SnakeColor = 2;
+    if (temp == '2') SnakeColor = 4;
+    if (temp == '3') SnakeColor = 6;
+    system("cls");
 
-		setting();	
+    setting();
 }
 void setting()
 {
-        system("cls");
-	    SetColor(7);
-	    gotoXY(57, 12);
-	    cout<<"MENU";
-	    gotoXY(50, 14);
-	    cout<<"1: Play New Game";
-	    gotoXY(50, 16);
-	    cout<<"2: Setting";
+    system("cls");
+    SetColor(7);
+    gotoXY(57, 12);
+    cout << "MENU";
+    gotoXY(50, 14);
+    cout << "1: Play New Game";
+    gotoXY(50, 16);
+    cout << "2: Setting";
+    gotoXY(50, 18);
+    cout << "3: Quit";
+    draw_Menu();
+    char temp = _getch();
+    while (temp != '1' && temp != '2' && temp != '3')
+        temp = _getch();
+
+    system("cls");
+    if (temp == '1') run();
+    if (temp == '2')
+    {
+        SetColor(7);
+        gotoXY(57, 12);
+        cout << "SETTING";
+        gotoXY(50, 14);
+        cout << "1: Choose level";
+        gotoXY(50, 16);
+        cout << "2: Choose mode";
         gotoXY(50, 18);
-	    cout<<"3: Quit";
-        draw_Menu();	
-		char temp = _getch();
-        while (temp != '1' && temp != '2' && temp != '3')
+        cout << "3: Choose color";
+        draw_Menu();
+        temp = _getch();
+
+        //code de fix tam cho issue #2 ////////////////////
+        while (temp != '1' && temp != '2' && temp != '3') {
             temp = _getch();
+        }
+        ///////////////////////////////////////////////////
 
-		system("cls");
-		if(temp == '1') run();
-		if(temp == '2')
-		{
-			SetColor(7);
-			gotoXY(57, 12);
-	        cout<<"SETTING";
-			gotoXY(50, 14);
-	        cout<<"1: Choose level";
-	        gotoXY(50, 16);
-	        cout<<"2: Choose mode";
-	        gotoXY(50, 18);
-	        cout<<"3: Choose color";
-			draw_Menu();
-			temp = _getch();
-			
-            //code de fix tam cho issue #2 ////////////////////
-            while (temp != '1' && temp != '2' && temp != '3'){
-                temp = _getch();
-            }
-            ///////////////////////////////////////////////////
+        system("cls");
+        if (temp == '1') setting_Level();
+        if (temp == '2') setting_Mode();
+        if (temp == '3') setting_SnakeColor();
 
-            system("cls");
-            if(temp == '1') setting_Level();
-			if(temp == '2') setting_Mode();
-			if(temp == '3') setting_SnakeColor();
-		
-		}
-        if(temp == '3') exit(0);
-		
-        //setting(); //Dong nay de fix tam thoi cho issue #2
+    }
+    if (temp == '3') exit(0);
+
+    //setting(); //Dong nay de fix tam thoi cho issue #2
 }
 
 void start()
 {
-    
+
     GameOver = false;
     fruitsEaten = 0;
+    fruitType = 1;
     Score = 0;
     fruitIsOnField = false;
     Length = 3;
     Direction = 3;
+    ShowCur(0);
     delete_snake();
     init_Snake();
     init_fruit();
@@ -509,17 +554,17 @@ void start()
 void run()
 {
     GameOver = false;
-	system("cls");
-	ShowCur(0);//an con tro
+    system("cls");
+    ShowCur(0);//an con tro
     //Do cac ham init da call trong start() roi nen ko can call nua
-	draw_Wall();
-	draw_Snake();
+    draw_Wall();
+    draw_Snake();
     draw_fruit();
-	draw_Scoreboard();
-	while(1&&!GameOver)
-	{
-		move();
-	}
+    draw_Scoreboard();
+    while (1 && !GameOver)
+    {
+        move();
+    }
     gameover();
 }
 
@@ -534,7 +579,7 @@ void pause() {
         gotoXY(50, 16);
         cout << "2: Return to menu";
         draw_Menu();
-        
+
         char temp = _getch();
         if (temp == '1') {
             system("cls");
@@ -571,11 +616,11 @@ void gameover() {
     while (true) {
         char temp = _getch();
         switch (temp) {
-            case '1':
-                system("cls");
-                start();
-            case '2':
-                exit(0);
+        case '1':
+            system("cls");
+            start();
+        case '2':
+            exit(0);
         }
     }
 }
