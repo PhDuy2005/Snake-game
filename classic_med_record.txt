@@ -1,5 +1,0 @@
-0|NULL player 1
-0|NULL player 2
-0|NULL player 3
-0|NULL player 4
-0|NULL player 5
